@@ -5,7 +5,7 @@ name: quilibrium
 
 services:
   node:
-    image: trancelife/quilibrium:1.4.8
+    image: trancelife/quilibrium:1.4.18
     restart: unless-stopped
     command: ["--signature-check=false"]
     deploy:
@@ -15,7 +15,7 @@ services:
           memory: '${MEM_LIMIT}'
         reservations:
           cpus: '${CPU_LIMIT}'
-          memory: ${MEM_LIMIT}'
+          memory: '${MEM_LIMIT}'
     environment:
       - DEFAULT_LISTEN_GRPC_MULTIADDR=/ip4/0.0.0.0/tcp/8337
       - DEFAULT_LISTEN_REST_MULTIADDR=/ip4/0.0.0.0/tcp/8338
