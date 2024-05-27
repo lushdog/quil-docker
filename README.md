@@ -1,5 +1,10 @@
 # quil-docker
 
+修改系统参数
+
+`sysctl -w net.core.wmem_max=600000000`
+`sysctl -w net.core.rmem_max=600000000`
+
 修改.env，根据个人情况限制cpu线程
 
 启动
