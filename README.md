@@ -4,6 +4,7 @@
 
 限制cpu占用
 
+启动
 `docker compose up -d`
 
 启动之后备份 .config/config.yml .config/key.yml
