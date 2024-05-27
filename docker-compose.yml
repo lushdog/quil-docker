@@ -5,7 +5,7 @@ name: quilibrium
 
 services:
   node:
-    image: trancelife/quilibrium
+    image: trancelife/quilibrium:1.4.8
     restart: unless-stopped
     command: ["--signature-check=false"]
     deploy:
