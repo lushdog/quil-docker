@@ -5,7 +5,7 @@
 启动
 `docker compose up -d`
 
-启动之后备份 .config/config.yml .config/key.yml (相当于密钥，一定要备份)
+启动之后备份 .config/config.yml .config/keys.yml (相当于密钥，一定要备份)
 
 查看节点信息
 
