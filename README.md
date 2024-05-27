@@ -2,6 +2,8 @@
 
 修改.env
 
+限制cpu占用
+
 `docker compose up -d`
 
 启动之后备份 .config/config.yml .config/key.yml
