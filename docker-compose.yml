@@ -11,11 +11,11 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '4'
-          memory: '8G'
+          cpus: '${CPU_LIMIT}'
+          memory: '${MEM_LIMIT}'
         reservations:
-          cpus: '4'
-          memory: '8G'
+          cpus: '${CPU_LIMIT}'
+          memory: ${MEM_LIMIT}'
     environment:
       - DEFAULT_LISTEN_GRPC_MULTIADDR=/ip4/0.0.0.0/tcp/8337
       - DEFAULT_LISTEN_REST_MULTIADDR=/ip4/0.0.0.0/tcp/8338
