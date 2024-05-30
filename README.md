@@ -20,3 +20,12 @@
 查看节点的 peer-id (相当于地址)
 
 `docker compose exec node node -peer-id --signature-check=false`
+
+### 更新
+
+镜像地址
+https://hub.docker.com/r/trancelife/quilibrium/tags
+
+`docker compose pull`
+
+`docker compose up -d`
