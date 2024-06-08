@@ -21,6 +21,10 @@
 
 `docker compose exec node node -peer-id --signature-check=false`
 
+查看余额
+
+`docker compose exec -it node node -balance -config /root/.config -signature-check=false`
+
 ### 更新
 
 镜像地址
