@@ -1,5 +1,11 @@
 FROM golang:1.22.4-bullseye as build
 
+# 构建
+# git clone https://source.quilibrium.com/quilibrium/ceremonyclient.git
+# cd ceremonyclient
+# curl -o Dockerfile https://raw.githubusercontent.com/lushdog/quil-docker/main/Dockerfile
+# docker build -f Dockerfile --build-arg NODE_VERSION=1.4.19 --build-arg MAX_KEY_ID=13 -t quilibrium -t quilibrium:1.4.19 .
+
 ARG NODE_VERSION
 ARG MAX_KEY_ID
 
@@ -8,8 +14,6 @@ ENV GOEXPERIMENT=arenas
 WORKDIR /opt/ceremonyclient
 
 COPY . .
-
-# 需要将代码的node文件夹复制到quil-docker文件夹内构建
 
 RUN cp "node/node-${NODE_VERSION}-linux-amd64" "node/node"
 RUN cp "node/node-${NODE_VERSION}-linux-amd64.dgst" "node/node.dgst"
