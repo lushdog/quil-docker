@@ -1,5 +1,4 @@
 version: '3.7'
-name: quilibrium
 
 # See sysctl related warning in DOCKER-README.md.
 # Host configuration changes are required.
