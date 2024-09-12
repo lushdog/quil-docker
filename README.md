@@ -6,7 +6,8 @@
 
 `sysctl -w net.core.rmem_max=600000000`
 
-修改.env，根据个人情况限制cpu线程
+修改.env，根据个人情况指定cpu核心
+例如 `0-3` 指定 4 个核心
 
 启动
 `docker compose up -d`

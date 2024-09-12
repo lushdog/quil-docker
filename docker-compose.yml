@@ -8,6 +8,7 @@ services:
     image: trancelife/quilibrium:latest
     restart: unless-stopped
     command: ["--signature-check=false"]
+    cpuset: '${CPU_SET}'
     environment:
       - DEFAULT_LISTEN_GRPC_MULTIADDR=/ip4/0.0.0.0/tcp/8337
       - DEFAULT_LISTEN_REST_MULTIADDR=/ip4/0.0.0.0/tcp/8338
