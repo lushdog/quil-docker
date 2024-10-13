@@ -1,74 +1,48 @@
-FROM golang:1.22.4-bullseye as build-base
+FROM golang:1.22.4-bullseye as build
 
-ENV PATH="${PATH}:/root/.cargo/bin/"
+# 构建
+# git clone https://source.quilibrium.com/quilibrium/ceremonyclient.git
+# cd ceremonyclient
+# curl -o Dockerfile https://raw.githubusercontent.com/lushdog/quil-docker/main/Dockerfile
+# docker build -f Dockerfile --build-arg NODE_VERSION=1.4.19 --build-arg MAX_KEY_ID=13 -t quilibrium -t quilibrium:1.4.19 .
 
-# Install GMP 6.2 (6.3 which MacOS is using only available on Debian unstable)
-RUN apt-get update && apt-get install -y \
-  libgmp-dev \
-  && rm -rf /var/lib/apt/lists/* 
-
-COPY docker/rustup-init.sh /opt/rustup-init.sh
-
-RUN /opt/rustup-init.sh -y --profile minimal
-
-# Install uniffi-bindgen-go
-RUN cargo install uniffi-bindgen-go --git https://github.com/NordSecurity/uniffi-bindgen-go --tag v0.2.1+v0.25.0
-
-FROM build-base as build
+ARG NODE_VERSION
+ARG MAX_KEY_ID
 
 ENV GOEXPERIMENT=arenas
-ENV QUILIBRIUM_SIGNATURE_CHECK=false
 
 WORKDIR /opt/ceremonyclient
 
 COPY . .
 
-## Generate Rust bindings for VDF
-WORKDIR /opt/ceremonyclient/vdf
-RUN ./generate.sh
+RUN apt-get update && apt-get install -y curl grep
+RUN files=$(curl https://releases.quilibrium.com/release | grep linux-amd64) && \
+    new_release=false && \
+    for file in $files; do \
+        version=$(echo "$file" | cut -d '-' -f 2); \
+        if ! test -f "./$file"; then \
+            curl "https://releases.quilibrium.com/$file" > "$file"; \
+            new_release=true; \
+        fi; \
+    done
 
-## Generate Rust bindings for BLS48581
-WORKDIR /opt/ceremonyclient/bls48581
-RUN ./generate.sh
-
-# Build and install the node
-WORKDIR /opt/ceremonyclient/node
-
-RUN ./build.sh && cp node /go/bin
-RUN go install github.com/fullstorydev/grpcurl/cmd/grpcurl@latest
-
-# Build and install qclient
 WORKDIR /opt/ceremonyclient/client
 
-# RUN go build -o qclient ./main.go
+RUN go build -o qclient ./main.go
 
-# Allows exporting single binary
-FROM scratch AS node
-COPY --from=build /go/bin/node /node
-ENTRYPOINT [ "/node" ]
+RUN go install github.com/fullstorydev/grpcurl/cmd/grpcurl@v1.9.1
 
-FROM debian:bullseye
-
-ARG NODE_VERSION
-ARG GIT_REPO
-ARG GIT_BRANCH
-ARG GIT_COMMIT
+FROM ubuntu:22.04
 
 ENV GOEXPERIMENT=arenas
 
-LABEL org.opencontainers.image.title="Quilibrium Network Node"
-LABEL org.opencontainers.image.description="Quilibrium is a decentralized alternative to platform as a service providers."
-LABEL org.opencontainers.image.version=$NODE_VERSION
-LABEL org.opencontainers.image.vendor=Quilibrium
-LABEL org.opencontainers.image.url=https://quilibrium.com/
-LABEL org.opencontainers.image.documentation=https://quilibrium.com/docs
-LABEL org.opencontainers.image.source=$GIT_REPO
-LABEL org.opencontainers.image.ref.name=$GIT_BRANCH
-LABEL org.opencontainers.image.revision=$GIT_COMMIT
+COPY --from=build /opt/ceremonyclient/node/node /usr/local/bin
+COPY --from=build /opt/ceremonyclient/node/node.dgst /usr/local/bin
+COPY --from=build /opt/ceremonyclient/node/node.dgst.sig.* /usr/local/bin
 
-COPY --from=build /go/bin/node /usr/local/bin
+COPY --from=build /opt/ceremonyclient/client/qclient /usr/local/bin
+
 COPY --from=build /go/bin/grpcurl /usr/local/bin
-# COPY --from=build /opt/ceremonyclient/client/qclient /usr/local/bin
 
 WORKDIR /root
 
