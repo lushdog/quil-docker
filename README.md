@@ -26,6 +26,17 @@
 
 `docker compose exec -it node node -balance -config /root/.config -signature-check=false`
 
+### 使用Qclient命令
+
+在quil-docker文件夹内执行
+
+`docker compose exec -it node qclient <命令> --signature-check=false` 
+
+例如查看quil余额
+
+`docker compose exec -it node qclient token balance --signature-check=false`
+
+
 ### 更新
 
 镜像地址
