@@ -7,24 +7,18 @@ FROM golang:1.22.4-bullseye as build
 # docker build -f Dockerfile --build-arg NODE_VERSION=1.4.19 --build-arg MAX_KEY_ID=13 -t quilibrium -t quilibrium:1.4.19 .
 
 ARG NODE_VERSION
-ARG MAX_KEY_ID
 
 ENV GOEXPERIMENT=arenas
 
-WORKDIR /opt/ceremonyclient
+WORKDIR /opt/ceremonyclient/node
 
 COPY . .
 
 RUN apt-get update && apt-get install -y curl grep
-RUN files=$(curl https://releases.quilibrium.com/release | grep linux-amd64) && \
-    new_release=false && \
-    for file in $files; do \
-        version=$(echo "$file" | cut -d '-' -f 2); \
-        if ! test -f "./$file"; then \
-            curl "https://releases.quilibrium.com/$file" > "$file"; \
-            new_release=true; \
-        fi; \
-    done
+
+RUN bash ./fetch.sh
+
+RUN chmod +x node
 
 WORKDIR /opt/ceremonyclient/client
 
