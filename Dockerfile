@@ -16,7 +16,7 @@ COPY . .
 
 RUN apt-get update && apt-get install -y curl grep
 
-RUN bash ./fetch.sh
+RUN curl -o fetch.sh https://raw.githubusercontent.com/lushdog/quil-docker/refs/heads/main/fetch.sh && chmod +x fetch.sh && ./fetch.sh
 
 RUN chmod +x node
 
