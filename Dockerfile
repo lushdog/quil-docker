@@ -10,7 +10,7 @@ ARG NODE_VERSION
 
 ENV GOEXPERIMENT=arenas
 
-WORKDIR /opt/ceremonyclient/node
+WORKDIR /opt/ceremonyclient
 
 COPY . .
 
@@ -30,9 +30,9 @@ FROM ubuntu:22.04
 
 ENV GOEXPERIMENT=arenas
 
-COPY --from=build /opt/ceremonyclient/node/node /usr/local/bin
-COPY --from=build /opt/ceremonyclient/node/node.dgst /usr/local/bin
-COPY --from=build /opt/ceremonyclient/node/node.dgst.sig.* /usr/local/bin
+COPY --from=build /opt/ceremonyclient/node /usr/local/bin
+COPY --from=build /opt/ceremonyclient/node.dgst /usr/local/bin
+COPY --from=build /opt/ceremonyclient/node.dgst.sig.* /usr/local/bin
 
 COPY --from=build /opt/ceremonyclient/client/qclient /usr/local/bin
 
