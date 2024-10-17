@@ -1,6 +1,6 @@
 FROM golang:1.22.4-bullseye as build
 
-WORKDIR /opt/node
+WORKDIR /opt/node/
 
 COPY . .
 
