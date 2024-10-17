@@ -3,14 +3,18 @@ fetch() {
     new_release=false
 
     for file in $files; do
-        version=$(echo "$file" | cut -d '-' -f 2)
+        # 下载文件
         if ! test -f "./$file"; then
             curl "https://releases.quilibrium.com/$file" > "$file"
             new_release=true
             
-            # 生成新的文件名，保持格式不变，只修改前缀
+            # 使用正则表达式匹配，替换掉前缀部分为 'node'
             new_name=$(echo "$file" | sed 's/node-.*-linux-amd64/node/')
-            mv "$file" "$new_name"
+            
+            # 只有当文件名不同的时候才执行重命名
+            if [[ "$file" != "$new_name" ]]; then
+                mv "$file" "$new_name"
+            fi
         fi
     done
 }
