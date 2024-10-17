@@ -9,7 +9,7 @@ fetch() {
             new_release=true
             
             # 生成新的文件名，保持格式不变，只修改前缀
-            new_name=$(echo "$file" | sed 's/node-2.0.0.6-linux-amd64/node/')
+            new_name=$(echo "$file" | sed 's/node-.*-linux-amd64/node/')
             mv "$file" "$new_name"
         fi
     done
