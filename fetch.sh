@@ -42,3 +42,7 @@ fetchQclient() {
 }
 
 fetchQclient
+
+chmod +x node
+
+chmod +x qclient
