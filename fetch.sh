@@ -18,7 +18,6 @@ fetch() {
         fi
     done
 }
-fetch
 
 fetchQclient() {
     files=$(curl https://releases.quilibrium.com/qclient-release | grep linux-amd64)
@@ -40,6 +39,15 @@ fetchQclient() {
         fi
     done
 }
+
+rm ./node
+rm ./node.dgst
+rm ./node.dgst.*
+rm ./qclient
+rm ./qclient.dgst
+rm ./qclient.dgst.*
+
+fetch
 
 fetchQclient
 
