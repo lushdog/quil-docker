@@ -51,4 +51,6 @@ https://hub.docker.com/r/trancelife/quilibrium/tags
 
 `docker compose kill -s SIGINT`
 
+`docker compose down`
+
 `docker compose up -d`
