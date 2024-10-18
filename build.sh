@@ -40,8 +40,19 @@ fetchQclient() {
     done
 }
 
+fetch
+fetchQclient
+
+chmod +x node
+chmod +x qclient
+
+rm -rf node_file
 mkdir -p node_file
-mv ./* node_file/
+mv ./node node_file/
+mv ./qclient node_file/
+mv ./node.* node_file/
+mv ./qclient.* node_file/
 
 docker build -f Dockerfile -t trancelife/quilibrium:latest .
 
+docker push trancelife/quilibrium:latest
