@@ -36,6 +36,11 @@
 
 `docker compose exec -it node qclient token balance --signature-check=false`
 
+### 优雅退出
+
+`docker compose kill -s SIGINT`
+
+`docker compose down`
 
 ### 更新
 
@@ -43,5 +48,7 @@
 https://hub.docker.com/r/trancelife/quilibrium/tags
 
 `docker compose pull`
+
+`docker compose kill -s SIGINT`
 
 `docker compose up -d`
