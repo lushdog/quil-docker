@@ -39,3 +39,9 @@ fetchQclient() {
         fi
     done
 }
+
+mkdir -p node_file
+mv ./* node_file/
+
+docker build -f Dockerfile -t trancelife/quilibrium:latest .
+
