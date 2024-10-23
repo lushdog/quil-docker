@@ -61,7 +61,7 @@ ARG GIT_COMMIT
 
 ENV GOEXPERIMENT=arenas
 
-RUN apt update && apt install ca-certificates && rm -rf /var/lib/apt/lists/*
+RUN apt update && apt install ca-certificates -y && rm -rf /var/lib/apt/lists/*
 
 LABEL org.opencontainers.image.title="Quilibrium Network Node"
 LABEL org.opencontainers.image.description="Quilibrium is a decentralized alternative to platform as a service providers."
