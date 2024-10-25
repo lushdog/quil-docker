@@ -54,3 +54,7 @@ https://hub.docker.com/r/trancelife/quilibrium/tags
 `docker compose down`
 
 `docker compose up -d`
+
+#### 2.0.1 重启检查
+
+`curl -s https://raw.githubusercontent.com/lushdog/quil-docker/refs/heads/main/check.sh | bash `
