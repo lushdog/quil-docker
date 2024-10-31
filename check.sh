@@ -1,54 +1,29 @@
 #!/bin/bash
 
-# 检查是否安装了 jq
-if ! command -v jq &> /dev/null; then
-  echo "jq 未安装，正在安装..."
+# 检查是否安装了 bc
+if ! command -v bc &> /dev/null; then
+  echo "bc 未安装，正在安装..."
   sudo apt-get update
-  sudo apt-get install -y jq
+  sudo apt-get install -y bc
 fi
 
-# 获取日志文件路径
-LOG_FILE=$(docker inspect --format='{{.LogPath}}' quilibrium-node-1)
+# 设置时间阈值（20分钟 = 1200秒）
+THRESHOLD=1200
 
-# 检查是否成功获取日志文件路径
-if [ -z "$LOG_FILE" ]; then
-  echo "无法获取日志文件路径"
-  exit 1
+# 进入 Docker Compose 所在目录
+cd ~/quil-docker || exit
+
+# 获取最新的 increment 时间戳
+last_increment_ts=$(docker compose logs | grep increment | tail -n 1 | awk -F '"ts":' '{print $2}' | awk -F ',' '{print $1}')
+
+# 获取当前的 Unix 时间戳
+current_ts=$(date +%s)
+
+# 计算时间差（转换为浮点数处理）
+time_diff=$(echo "$current_ts - $last_increment_ts" | bc)
+
+# 使用 awk 进行浮点数比较
+if echo "$time_diff $THRESHOLD" | awk '{if ($1 > $2) exit 0; else exit 1}'; then
+  echo "超过20分钟未检测到 'increment'，正在重启 Docker 容器..."
+  docker compose restart
 fi
-
-# 读取日志文件的最后1000行，并提取包含frame_number的行
-frame_number_lines=$(tail -n 1000 "$LOG_FILE" | grep "frame_number")
-
-# 提取所有的frame_number值
-frame_numbers=$(echo "$frame_number_lines" | jq -r '.log | fromjson | .frame_number')
-
-# 判断所有的frame_number值是否相同
-if [ -z "$frame_numbers" ]; then
-  echo "日志文件中没有找到frame_number"
-  exit 1
-fi
-
-first_frame_number=$(echo "$frame_numbers" | head -n 1)
-all_same=1
-max_frame_number=$first_frame_number
-
-while read -r frame_number; do
-  if [ "$frame_number" != "$first_frame_number" ]; then
-    all_same=0
-  fi
-  if [ "$frame_number" -gt "$max_frame_number" ]; then
-    max_frame_number=$frame_number
-  fi
-done <<< "$frame_numbers"
-
-if [ "$all_same" -eq 1 ]; then
-  echo "1 $first_frame_number"
-  echo "所有frame_number相同，重启Docker容器..."
-  cd ~/quil-docker/
-  docker compose kill -s SIGINT
-  docker compose down
-  docker compose up -d
-else
-  echo "$max_frame_number"
-fi
-
