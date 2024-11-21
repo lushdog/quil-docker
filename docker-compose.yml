@@ -7,7 +7,7 @@ services:
   node:
     image: trancelife/quilibrium:latest
     restart: unless-stopped
-    command: ["--signature-check=false"]
+    command: ["--prometheus-server=0.0.0.0:8399"]
     cpuset: '${CPU_SET}'
     environment:
       - DEFAULT_LISTEN_GRPC_MULTIADDR=/ip4/0.0.0.0/tcp/8337
